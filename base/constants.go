@@ -77,6 +77,12 @@ const KeyLenVariable = 2
 const MigrationFilterLen = 2
 const xattrSizeLen = 4
 
+const (
+	JsonBody     = "Body"
+	JsonMetadata = "Metadata"
+	Updated      = "Updated"
+)
+
 func GetFixedSizeMutationLen(keyLen int, size uint32, colMigrationFilterMatched []uint8) int {
 	return KeyLenVariable + keyLen + (2 * xattrSizeLen) + int(size) + BodyLength + MigrationFilterLen + len(colMigrationFilterMatched)*2
 }

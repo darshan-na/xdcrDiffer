@@ -58,52 +58,13 @@ function killBgTail {
 	fi
 }
 
-while getopts ":h:p:u:r:s:t:n:q:v:cm:ew:d:x:" opt; do
+while getopts ":cp:" opt; do
 	case ${opt} in
-	u)
-		username=$OPTARG
-		;;
 	p)
-		password=$OPTARG
-		;;
-	h)
-		hostname=$OPTARG
-		;;
-	r)
-		remoteClusterName=$OPTARG
-		;;
-	s)
-		sourceBucketName=$OPTARG
-		;;
-	t)
-		targetBucketName=$OPTARG
-		;;
-	n)
-		remoteClusterUsername=$OPTARG
-		;;
-	q)
-		remoteClusterPassword=$OPTARG
+		path=$OPTARG
 		;;
 	c)
 		cleanBeforeRun=1
-		;;
-	m)
-		compareType=$OPTARG
-		;;
-	v)
-		targetUrl=$OPTARG
-		;;
-	e)
-		mutationRetries=$OPTARG
-		;;
-	d)
-		debugMode=1
-		;;
-	w)
-		setupTimeout=$OPTARG
-		;;
-	x)
-		fileContaingXattrKeysForNoComapre=$OPTARG
 		;;
 	\?)
 		echo "Invalid option: $OPTARG" 1>&2
@@ -115,35 +76,9 @@ while getopts ":h:p:u:r:s:t:n:q:v:cm:ew:d:x:" opt; do
 done
 shift $((OPTIND - 1))
 
-if [[ -z "$username" ]]; then
-	echo "Missing username"
-	printHelp
-	exit 1
-elif [[ -z "$password" ]]; then
-	echo "Missing password"
-	printHelp
-	exit 1
-elif [[ -z "$hostname" ]]; then
-	echo "Missing hostname and port"
-	printHelp
-	exit 1
-elif [[ -z "$sourceBucketName" ]]; then
-	echo "Missing sourceBucket"
-	printHelp
-	exit 1
-elif [[ -z "$targetBucketName" ]]; then
-	echo "Missing targetBucket"
-	printHelp
-	exit 1
-elif [[ -z "$remoteClusterName" ]] && [[ -z "$targetUrl" ]]; then
-	echo "Missing remoteCluster name or target URL"
-	printHelp
-	exit 1
-fi
-
 findExec
 
-export CBAUTH_REVRPC_URL="http://$username:$password@$hostname"
+export CBAUTH_REVRPC_URL=""
 echo "Exporting $CBAUTH_REVRPC_URL"
 
 if [[ ! -z "$cleanBeforeRun" ]]; then
@@ -166,53 +101,10 @@ fi
 
 currentPwd=$(pwd)
 execString="$currentPwd/$execGo"
-execString="${execString} -sourceUrl"
-execString="${execString} $hostname"
-execString="${execString} -sourceUsername"
-execString="${execString} $username"
-execString="${execString} -sourcePassword"
-execString="${execString} $password"
-execString="${execString} -sourceBucketName"
-execString="${execString} $sourceBucketName"
-execString="${execString} -targetBucketName"
-execString="${execString} $targetBucketName"
-
-if [[ ! -z "$remoteClusterUsername" ]] && [[ ! -z "$remoteClusterPassword" ]]; then
-	execString="${execString} -targetUsername"
-	execString="${execString} $remoteClusterUsername"
-	execString="${execString} -targetPassword"
-	execString="${execString} $remoteClusterPassword"
-fi
-if [[ ! -z "$remoteClusterName" ]]; then
-	execString="${execString} -remoteClusterName"
-	execString="${execString} $remoteClusterName"
-elif [[ ! -z "$targetUrl" ]]; then
-	execString="${execString} -targetUrl"
-	execString="${execString} $targetUrl"
-fi
-if [[ ! -z "$maxFileDescs" ]]; then
-	execString="${execString} -numberOfFileDesc"
-	execString="${execString} $maxFileDescs"
-fi
-if [[ ! -z "$compareType" ]]; then
-	execString="${execString} -compareType"
-	execString="${execString} $compareType"
-fi
-if [[ ! -z "$mutationRetries" ]]; then
-	execString="${execString} -mutationRetries"
-	execString="${execString} $mutationRetries"
-fi
-if [[ ! -z "$setupTimeout" ]]; then
-	execString="${execString} -setupTimeout"
-	execString="${execString} $setupTimeout"
-fi
-if [[ ! -z "$debugMode" ]]; then
-	execString="${execString} -debugMode"
-	execString="${execString} $debugMode"
-fi
-if [[ ! -z "$fileContaingXattrKeysForNoComapre" ]]; then
-	execString="${execString} -fileContaingXattrKeysForNoComapre"
-	execString="${execString} $fileContaingXattrKeysForNoComapre"
+echo "path $path"
+if [[ ! -z "$path" ]] ; then
+	execString="${execString} -configPath"
+	execString="${execString} $path"
 fi
 
 # Execute the differ in background and watch the pid to be finished

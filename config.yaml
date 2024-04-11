@@ -1,0 +1,60 @@
+# Source details
+SourceUrl: "127.0.0.1:9000" # Mandatory
+SourceUsername: "Administrator" # Mandatory
+SourcePassword: "wewewe" # Mandatory
+SourceBucketName: "B1" # Mandatory
+# RemoteCluster Name 
+RemoteClusterName: "C2" # Mandatory
+#Target Details(Upon Populating them, differ will run in Legacy Mode)
+TargetUrl: ""
+TargetUsername: ""
+TargetPassword: ""
+TargetBucketName: "B2" # Mandatory
+#File paths to be used by differ to store/read data during its runtime
+SourceFileDir: "source"
+TargetFileDir: "target"
+CheckpointFileDir: "checkpoint"
+FileDifferDir: "fileDiff"
+MutationDifferDir: "mutationDiff"
+OldSourceCheckpointFileName: ""
+OldTargetCheckpointFileName: ""
+NewCheckpointFileName: ""
+#Configurable Parameters
+NumberOfSourceDcpClients: 1
+NumberOfWorkersPerSourceDcpClient: 64
+NumberOfTargetDcpClients: 1
+NumberOfWorkersPerTargetDcpClient: 64
+NumberOfWorkersForFileDiffer: 30
+NumberOfWorkersForMutationDiffer: 30
+NumberOfBins: 5
+NumberOfFileDesc: 500
+CompleteByDuration: 0
+CompleteBySeqno: true
+MutationDifferBatchSize: 100
+MutationDifferTimeout: 30
+SourceDcpHandlerChanSize: 100000
+TargetDcpHandlerChanSize: 100000
+BucketOpTimeout: 20
+MaxNumOfGetStatsRetry: 10
+MaxNumOfSendBatchRetry: 10
+GetStatsRetryInterval: 2
+SendBatchRetryInterval: 500
+GetStatsMaxBackoff: 10
+SendBatchMaxBackoff: 5
+DelayBetweenSourceAndTarget: 2
+CheckpointInterval: 600
+RunDataGeneration: true
+RunFileDiffer: true
+RunMutationDiffer: true
+EnforceTLS: false
+BucketBufferCapacity: 100000
+CompareType: "meta"
+MutationDifferRetries: 0
+MutationDifferRetriesWaitSecs: 60
+NumOfFiltersInFilterPool: 32
+DebugMode: false
+SetupTimeout: 10
+XattrKeysToBeAvoided:
+  - _eventing
+  - _fts
+  - _indexing

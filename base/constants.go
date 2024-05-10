@@ -61,21 +61,23 @@ const ClusterRunMaxPortNo uint16 = 9007
 
 // length of mutation metadata + body, which consists of
 //
-//	seqno    - 8 bytes
-//	revId    - 8 bytes
-//	cas      - 8 bytes
-//	flags    - 4 bytes
-//	expiry   - 4 bytes
-//	opCode   - 2 bytes
-//	datatype - 2 byte
-//	hash     - 64 bytes
-//	collectionId - 4 bytes
-//	migrationFilterLen - 2 bytes
-//	(variable) - each filterID is 2 bytes
-const BodyLength = 104
+// seqno              - 8 bytes
+// revId              - 8 bytes
+// cas                - 8 bytes
+// importCas          - 8 bytes
+// pRev               - 8 bytes
+// flags              - 4 bytes
+// expiry             - 4 bytes
+// opCode             - 2 bytes
+// datatype           - 2 bytes
+// hash               - 64 bytes
+// collectionId       - 4 bytes
+// migrationFilterLen - 2 bytes
+// (variable) - each filterID is 2 bytes
+const BodyLength = 120
 const KeyLenVariable = 2
 const MigrationFilterLen = 2
-const xattrSizeLen = 4 // To store the size of the individual Xattr Key-Value pair
+const xattrSizeLen = 4 // To store the size of the HLV
 
 const (
 	JsonBody     = "Body"
@@ -88,7 +90,7 @@ const (
 // @param size denoted the combined length of importCAS and HLV
 // @param colMigrationFilterMatched denotes the list of Migration Filters matched
 func GetFixedSizeMutationLen(keyLen int, size uint32, colMigrationFilterMatched []uint8) int {
-	return KeyLenVariable + keyLen + (2 * xattrSizeLen) + int(size) + BodyLength + MigrationFilterLen + len(colMigrationFilterMatched)*2 // (2*xattrSizeLen - to store the size of importCAS and HLV)
+	return KeyLenVariable + keyLen + xattrSizeLen + int(size) + BodyLength + MigrationFilterLen + len(colMigrationFilterMatched)*2 // (xattrSizeLen - to store the size of HLV)
 
 }
 
